@@ -16,7 +16,7 @@ struct reqpc_request *reqpc_request_create(int clientfd) {
   return request;
 }
 
-void reqpc_request_destroy(struct reqpc_request *request) {
+void reqpc_request_free(struct reqpc_request *request) {
   reqpc_buffer_free(request->buffer);
   free(request);
 }

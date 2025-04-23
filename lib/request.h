@@ -34,6 +34,6 @@ struct reqpc_request {
 struct reqpc_request *reqpc_request_create(int clientfd);
 
 // Destroys a reqpc_request struct created by reqpc_request_create
-void reqpc_request_destroy(struct reqpc_request *request);
+void reqpc_request_free(struct reqpc_request *request);
 
 #endif
