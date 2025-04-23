@@ -1,3 +1,4 @@
+#include "buffer.h"
 #include <netinet/in.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -38,6 +39,11 @@ int main() {
 
   while (true) {
     int clientfd = accept(sockfd, NULL, NULL);
+
+    struct reqpc_buffer *buffer = reqpc_buffer_create(8);
+    reqpc_buffer_read_until(buffer, clientfd);
+    printf("%s\n", buffer->ptr);
+    reqpc_buffer_free(buffer);
   }
 
   return EXIT_SUCCESS;
