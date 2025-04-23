@@ -1,3 +1,7 @@
 # C outputs
 *.bin
 *.o
+
+# Clangd files
+compile_commands.json
+.cache
