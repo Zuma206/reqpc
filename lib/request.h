@@ -26,4 +26,11 @@ struct reqpc_request {
   char *body;
 };
 
+// Create a request struct based on the request coming in from clientfd. The
+// returned request must be destroyed by reqpc_request_destroy
+struct reqpc_request *reqpc_request_create(int clientfd);
+
+// Destroys a reqpc_request struct created by reqpc_request_create
+void reqpc_request_destroy(struct reqpc_request *request);
+
 #endif
