@@ -21,9 +21,10 @@ char *reqpc_buffer_tail(struct reqpc_buffer *buffer);
 // out of memory.
 bool reqpc_buffer_grow(struct reqpc_buffer *buffer, int factor);
 
-// Reads from the file descriptor fd until EOF. Returns true if EOF is reached
-// and false if an error occurs.
-bool reqpc_buffer_read_until(struct reqpc_buffer *buffer, int fd);
+// Reads from a file descriptor into a buffer until the end of the file is
+// reached, or the specified token is hit. Returns a pointer to the token in the
+// buffer, or NULL if the token can't be found.
+char *reqpc_buffer_read_until(struct reqpc_buffer *buffer, int fd, char *token);
 
 // Create a reqpc_buffer of size initial_size that must be freed by
 // reqpc_buffer_free. Returns NULL on out of memory.

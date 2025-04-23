@@ -1,6 +1,7 @@
 #include "buffer.h"
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
 size_t reqpc_buffer_mem_left(struct reqpc_buffer *buffer) {
@@ -24,25 +25,32 @@ bool reqpc_buffer_grow(struct reqpc_buffer *buffer, int factor) {
   return true;
 }
 
-bool reqpc_buffer_read_until(struct reqpc_buffer *buffer, int fd) {
-  int bytes_read;
-  // Read until the end of file, or an error
-  while ((bytes_read = read(fd, reqpc_buffer_tail(buffer),
-                            reqpc_buffer_mem_left(buffer))) > 0) {
-    // Update the memory used
-    buffer->used += bytes_read;
-    if (buffer->used == buffer->size) {
-      // If out of space, double the buffer size
+char *reqpc_buffer_read_until(struct reqpc_buffer *buffer, int fd,
+                              char *token) {
+  while (true) {
+    // Read into the buffer
+    char *tail = reqpc_buffer_tail(buffer);
+    size_t mem_left = reqpc_buffer_mem_left(buffer);
+    int bytes_read = read(fd, tail, mem_left);
+
+    // Return NULL if EOF or error
+    if (bytes_read < 0)
+      return NULL;
+
+    // If the buffer is now full, double it's size
+    if ((buffer->used += bytes_read) >= buffer->size) {
       bool success = reqpc_buffer_grow(buffer, 2);
       if (!success)
-        return false;
+        return NULL;
     }
-  }
-  // Error case
-  if (bytes_read == -1)
-    return false;
 
-  return true;
+    // Insert the null character so strstr can be used
+    tail[bytes_read] = '\0';
+    // Search for token in the newly recieved data
+    char *token = strstr(tail, token);
+    if (token != NULL)
+      return token;
+  }
 }
 
 struct reqpc_buffer *reqpc_buffer_create(size_t initial_size) {
