@@ -30,6 +30,6 @@ bool reqpc_buffer_read_until(struct reqpc_buffer *buffer, int fd);
 struct reqpc_buffer *reqpc_buffer_create(size_t initial_size);
 
 // Frees a reqpc_buffer created by reqpc_buffer_create.
-void reqpc_buffer_destroy(struct reqpc_buffer *buffer);
+void reqpc_buffer_free(struct reqpc_buffer *buffer);
 
 #endif
