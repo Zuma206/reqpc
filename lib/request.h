@@ -2,6 +2,7 @@
 #define REQPC_REQUEST_H
 
 // A single HTTP header
+#include "buffer.h"
 struct reqpc_header {
   // The key, i.e. Authentication
   char *key;
@@ -14,7 +15,10 @@ struct reqpc_header {
 
 // An HTTP request
 struct reqpc_request {
-  // The method i.e. GET, POST, etc.
+  // Buffer that contains the (modified with null chars) HTTP request in it's
+  // entirety
+  struct reqpc_buffer *buffer;
+  // //The method i.e. GET, POST, etc.
   char *method;
   // The URL/path of the resource being requested
   char *url;
