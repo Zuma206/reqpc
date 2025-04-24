@@ -7,7 +7,7 @@ MK_ARCHIVE ?= $(AR) cr $@
 MK_EXECUTABLE ?= $(CC) -o $@
 
 build/test-server: build build/libreqpc.a src/main.c
-	$(MK_EXECUTABLE) src/main.c -I lib -L build -l reqpc
+	$(MK_EXECUTABLE) src/main.c -I lib -L build -l reqpc -g
 
 build/libreqpc.a: build build/reqpc-request.o build/reqpc-buffer.o
 	$(MK_ARCHIVE) build/reqpc-request.o build/reqpc-buffer.o
