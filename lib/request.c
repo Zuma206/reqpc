@@ -12,6 +12,7 @@ struct reqpc_request *reqpc_request_create(int clientfd) {
     reqpc_buffer_free(buffer);
     return NULL;
   }
+  request->buffer = buffer;
 
   request->method = reqpc_buffer_tail(buffer);
   char *first_space = reqpc_buffer_read_until(buffer, clientfd, " ");
