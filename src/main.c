@@ -1,9 +1,10 @@
-#include "buffer.h"
+#include "request.h"
 #include <netinet/in.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 // The default protocol for the other socket parameters
 static const int DEFAULT_PROTOCOL = 0;
@@ -40,10 +41,12 @@ int main() {
   while (true) {
     int clientfd = accept(sockfd, NULL, NULL);
 
-    struct reqpc_buffer *buffer = reqpc_buffer_create(8);
-    reqpc_buffer_read_until(buffer, clientfd);
-    printf("%s\n", buffer->ptr);
-    reqpc_buffer_free(buffer);
+    struct reqpc_request *request = reqpc_request_create(clientfd);
+    assert(request != NULL, "Request was null");
+
+    printf("Got request of method: %s\n", request->method);
+    reqpc_request_free(request);
+    close(clientfd);
   }
 
   return EXIT_SUCCESS;
