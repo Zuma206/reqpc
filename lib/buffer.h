@@ -18,7 +18,8 @@ size_t reqpc_buffer_mem_left(struct reqpc_buffer *buffer);
 char *reqpc_buffer_tail(struct reqpc_buffer *buffer);
 
 // Scales the size of the buffer by factor. Returns true on success and false on
-// out of memory.
+// out of memory. WARNING: this reallocates the buffer, meaning all previous
+// reqpc_buffer_tail or reqpc_buffer_mem_left calls are now incorrect.
 bool reqpc_buffer_grow(struct reqpc_buffer *buffer, int factor);
 
 // Reads from a file descriptor into a buffer until the end of the file is

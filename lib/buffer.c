@@ -1,5 +1,6 @@
 #include "buffer.h"
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -34,7 +35,7 @@ char *reqpc_buffer_read_until(struct reqpc_buffer *buffer, int fd,
     int bytes_read = read(fd, tail, mem_left);
 
     // Return NULL if EOF or error
-    if (bytes_read < 0)
+    if (bytes_read <= 0)
       return NULL;
 
     // If the buffer is now full, double it's size
@@ -42,14 +43,16 @@ char *reqpc_buffer_read_until(struct reqpc_buffer *buffer, int fd,
       bool success = reqpc_buffer_grow(buffer, 2);
       if (!success)
         return NULL;
+      // Recalculate the old tail now the buffer data is at a different address
+      tail = reqpc_buffer_tail(buffer) - bytes_read;
     }
 
     // Insert the null character so strstr can be used
     tail[bytes_read] = '\0';
     // Search for token in the newly recieved data
-    char *token = strstr(tail, token);
-    if (token != NULL)
-      return token;
+    char *needle = strstr(tail, token);
+    if (needle != NULL)
+      return needle;
   }
 }
 
